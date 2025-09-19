@@ -18,13 +18,42 @@ function getEmotionsArray(cats){
 //Make the 'get image' btn functional by grabbin the id of the selected radio
 
 const getImageBtn = document.getElementById('get-image-btn')
-getImageBtn.addEventListener('click', getMatchingCatsArray)
+getImageBtn.addEventListener('click', renderCat)
 
-function getMatchingCatsArray(e){
+//grabbing the animated gifs only button
+const gifsOnly = document.getElementById("gifs-only-option")
+
+//This returns an array of cat objects that matches the user's criteria (the selected emotion)
+function getMatchingCatsArray(){ 
     if (document.querySelector('input[type=radio]:checked')){
         const selectedEmotion = document.querySelector('input[type=radio]:checked').value
-        console.log(selectedEmotion)
+        const isGif = gifsOnly.checked
+
+        //filtering the array either with gif only cats or all cats
+        const matchedCats = catsData.filter(function(cat){
+            if (isGif){
+                return cat.emotionTags.includes(selectedEmotion) && cat.isGif
+            } else {
+                return cat.emotionTags.includes(selectedEmotion)
+            }
+            
+        })
+        return matchedCats
+
     }
+    
+}
+
+//This will return a single cat object selected from the array provided by getMatchingCatsArray
+function getSingleCatObject() {
+    console.log("getsinglecatobject hit!")
+    console.log(getMatchingCatsArray())
+}
+
+//This will use the cat object provided by getSingleCatObject to create HTML string which it will render it to the DOM
+function renderCat() {
+    console.log("rendercat hit")
+    getSingleCatObject()
 }
 
 
