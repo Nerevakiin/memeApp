@@ -47,7 +47,7 @@ function getMatchingCatsArray(){
 //This will return a single cat object selected from the array provided by getMatchingCatsArray
 function getSingleCatObject() {
     console.log("getsinglecatobject hit!")
-    console.log(getMatchingCatsArray())
+    const catsArray = getMatchingCatsArray()
 }
 
 //This will use the cat object provided by getSingleCatObject to create HTML string which it will render it to the DOM
