@@ -1,27 +1,86 @@
 import {catsData} from './data.js'
 
 
-//Create an empty array and fill it with the data imported 
-function getEmotionsArray(cats){
-    const emotionsArray = []
-    for (let cat of cats){
-        for (let emotion of cat.emotionTags){
-            if (!emotionsArray.includes(emotion)){
-                emotionsArray.push(emotion)
-            }
-        }
+const getImageBtn = document.getElementById('get-image-btn')
+const emotionRadios = document.getElementById("emotion-radios")
+const gifsOnly = document.getElementById("gifs-only-option")
+const memeModalInner = document.getElementById('meme-modal-inner')
+const memeModal = document.getElementById('meme-modal')
+const closeModalBtn = document.getElementById('meme-modal-close-btn')
+
+
+
+emotionRadios.addEventListener("change", highlightCheckedOption)
+getImageBtn.addEventListener('click', renderCat)
+
+
+
+//test place
+memeModal.addEventListener('click', function(e){
+    
+    if (e.target === memeModal){
+        memeModal.style.display = "none"
     }
-    return emotionsArray 
+    
+})
+
+
+
+
+
+//UI in select/deselect radio choice
+    
+function highlightCheckedOption(e){
+
+    const radiosArray = document.getElementsByClassName('radio')
+    for (let radios of radiosArray) {
+        radios.classList.remove("highlight")
+    }
+    
+    document.getElementById(e.target.id).parentElement.classList.add("highlight")
 }
 
 
-//Make the 'get image' btn functional by grabbin the id of the selected radio
 
-const getImageBtn = document.getElementById('get-image-btn')
-getImageBtn.addEventListener('click', renderCat)
 
-//grabbing the animated gifs only button
-const gifsOnly = document.getElementById("gifs-only-option")
+
+//This will use the cat object provided by getSingleCatObject to create HTML string which it will render it to the DOM
+function renderCat() {
+    
+    const catObject = getSingleCatObject()
+    memeModalInner.innerHTML = `
+        <img
+        class="cat-img"
+        src="./images/${catObject.image}"
+        alt="${catObject.alt}">
+    `
+    memeModal.style.display = "flex"
+}
+
+//add functionality to the X button which closes the modal
+closeModalBtn.addEventListener('click', function(){
+    memeModal.style.display = "none"
+})
+
+
+
+
+
+//This will return a single cat object selected from the array provided by getMatchingCatsArray
+function getSingleCatObject() {
+    
+    const catsArray = getMatchingCatsArray()
+    
+    if (catsArray === 1) {
+        return catsArray[0]
+    } else {
+        return catsArray[Math.floor(Math.random() * catsArray.length)]
+    }
+    
+}
+
+
+
 
 //This returns an array of cat objects that matches the user's criteria (the selected emotion)
 function getMatchingCatsArray(){ 
@@ -39,37 +98,28 @@ function getMatchingCatsArray(){
             
         })
         return matchedCats
-
     }
-    
-}
-
-//This will return a single cat object selected from the array provided by getMatchingCatsArray
-function getSingleCatObject() {
-    console.log("getsinglecatobject hit!")
-    const catsArray = getMatchingCatsArray()
-}
-
-//This will use the cat object provided by getSingleCatObject to create HTML string which it will render it to the DOM
-function renderCat() {
-    console.log("rendercat hit")
-    getSingleCatObject()
 }
 
 
-//UI in select/deselect radio choice
-const emotionRadios = document.getElementById("emotion-radios")
-emotionRadios.addEventListener("change", highlightCheckedOption)
-    
-function highlightCheckedOption(e){
 
-    const radiosArray = document.getElementsByClassName('radio')
-    for (let radios of radiosArray) {
-        radios.classList.remove("highlight")
+
+//Create an empty array and fill it with the data imported 
+function getEmotionsArray(cats){
+    const emotionsArray = []
+    for (let cat of cats){
+        for (let emotion of cat.emotionTags){
+            if (!emotionsArray.includes(emotion)){
+                emotionsArray.push(emotion)
+            }
+        }
     }
-    
-    document.getElementById(e.target.id).parentElement.classList.add("highlight")
+    return emotionsArray 
 }
+
+
+
+
 
 
 //Render the emotion choices on the DOM
@@ -88,10 +138,9 @@ function renderEmotionsRadios(cats){
                 <label for="${emotionHtml}">${emotionHtml}</label> 
             </div>`
     }
-
-    emotionRadios.innerHTML = emotionsList
-    
+    emotionRadios.innerHTML = emotionsList 
 }
+
 
 renderEmotionsRadios(catsData) 
 
